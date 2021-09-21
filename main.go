@@ -6,8 +6,13 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
+	"github.com/butterfly-ci/agent/run"
 	"github.com/urfave/cli/v2"
 )
+
+func init() {
+	log.SetLevel(log.DebugLevel)
+}
 
 func main() {
 	app := &cli.App{}
@@ -23,6 +28,7 @@ func main() {
 			Action: func(c *cli.Context) error {
 				log.Debugf("key:", c.String("key")) // TODO: don't log this...
 				// Run our fun run.go code.
+				run.Run()
 				return nil
 			},
 		},
