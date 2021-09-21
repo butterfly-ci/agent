@@ -6,12 +6,24 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
+	"github.com/butterfly-ci/agent/internal"
 	"github.com/butterfly-ci/agent/run"
 	"github.com/urfave/cli/v2"
 )
 
 func init() {
-	log.SetLevel(log.DebugLevel)
+	logLevel := internal.GetEnvstring("LOG_LEVEL", log.InfoLevel.String())
+	logType := internal.GetEnvstring("LOG_TYPE", "text")
+	if logType == "json" {
+		log.SetFormatter(&log.JSONFormatter{PrettyPrint: true})
+	}
+	parsedLogLevel, err := log.ParseLevel(logLevel)
+
+	if err != nil {
+		log.Errorf("Bad LOG_LEVEL defined: %v. Defaulting to INFO level", err)
+		parsedLogLevel = log.InfoLevel
+	}
+	log.SetLevel(parsedLogLevel)
 }
 
 func main() {
@@ -28,7 +40,8 @@ func main() {
 			Action: func(c *cli.Context) error {
 				log.Debugf("key:", c.String("key")) // TODO: don't log this...
 				// Run our fun run.go code.
-				run.Run()
+				a := run.NewRun()
+				a.Runner()
 				return nil
 			},
 		},
