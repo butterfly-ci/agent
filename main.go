@@ -7,7 +7,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/butterfly-ci/agent/internal"
-	"github.com/butterfly-ci/agent/run"
+	"github.com/butterfly-ci/agent/pkg/run"
 	"github.com/urfave/cli/v2"
 )
 
@@ -38,7 +38,7 @@ func main() {
 				&cli.StringFlag{Name: "key", Aliases: []string{"k"}},
 			},
 			Action: func(c *cli.Context) error {
-				log.Debugf("key:", c.String("key")) // TODO: don't log this...
+				log.Debugf("key: %s", c.String("key")) // TODO: don't log this...
 				// Run our fun run.go code.
 				a := run.NewRun()
 				a.Runner()
